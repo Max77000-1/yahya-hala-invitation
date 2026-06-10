@@ -2,175 +2,135 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>دعوة زفاف يحيى و حلا</title>
 <meta property="og:title" content="دعوة زفاف يحيى و حلا">
 <meta property="og:description" content="يسرّنا دعوتكم لحضور حفل الزفاف · السبت 20.06.2026">
-<meta property="og:image" content="invitation-full.jpg">
-<meta name="theme-color" content="#5b6b4f">
+<meta property="og:image" content="p1-hero.png">
+<meta name="theme-color" content="#f3f1ec">
 <style>
+  :root{ --paper:#f4f2ed; --ink:#5b6b4f; }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html{scroll-behavior:smooth;}
   body{
-    background:#e9ece6;
+    background:var(--paper);
+    color:var(--ink);
     font-family:system-ui,'Segoe UI',sans-serif;
-    color:#5b6b4f;
     overflow-x:hidden;
   }
 
-  /* إطار الدعوة، بعرض هاتف على الشاشات الكبيرة */
-  .frame{
-    max-width:460px;
+  /* عمود الدعوة، بعرض هاتف على الشاشات الكبيرة */
+  .deck{
+    width:min(92vw, 430px);
     margin:0 auto;
-    background:#fff;
-    box-shadow:0 20px 60px rgba(60,70,55,.18);
-    position:relative;
+    padding-bottom:14vh;
   }
 
-  /* كل قسم = شريحة من الصورة الطويلة، تُكشف عند التمرير */
-  .band{
-    position:relative;
-    width:100%;
-    aspect-ratio:1366 / 768;     /* 5 أقسام متساوية من 1366×3840 */
-    overflow:hidden;
+  .block{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:9vh 0;
     opacity:0;
-    transform:translateY(38px) scale(.985);
-    transition:opacity 1s ease, transform 1.1s cubic-bezier(.16,.84,.3,1);
+    transform:translateY(48px) scale(.97);
+    transition:opacity 1.05s ease, transform 1.2s cubic-bezier(.16,.84,.3,1);
     will-change:opacity,transform;
   }
-  .band.in{opacity:1;transform:none;}
-  .band img{
-    position:absolute;
-    left:0;
-    width:100%;
+  .block.in{ opacity:1; transform:none; }
+  .block:first-child{ padding-top:8vh; }
+
+  .block img{
     display:block;
+    height:auto;
     user-select:none;
     -webkit-user-drag:none;
   }
-  /* بريق ناعم يمرّ مرة عند ظهور القسم */
-  .band::after{
-    content:"";
-    position:absolute;inset:0;
-    background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.35) 50%,transparent 62%);
-    transform:translateX(-130%);
-    pointer-events:none;
-  }
-  .band.in::after{animation:sheen 1.3s ease .25s 1;}
-  @keyframes sheen{to{transform:translateX(130%);}}
+  /* دمج خلفية القصاصات البيضاء مع الورق بسلاسة (للنصوص فقط) */
+  .block.text img{ mix-blend-mode:multiply; }
 
-  /* مؤشّر التقدّم العلوي */
-  .progress{
-    position:fixed;top:0;left:0;height:3px;width:0;
-    background:linear-gradient(90deg,#8a9a76,#5b6b4f);
-    z-index:30;transition:width .15s ease;
-  }
+  /* مقاسات الكتل بمقياس موحّد (نسبة عرضها إلى عرض الهيرو 802) */
+  /* aspect-ratio يحجز ارتفاع كل صورة قبل تحميلها (حتى يقيس الكشف بدقّة) */
+  img.w-hero    { width:100%;  aspect-ratio:802/818; border-radius:10px; box-shadow:0 16px 44px rgba(60,70,55,.20); }
+  img.w-emblem  { width:30%;   aspect-ratio:240/362; }
+  img.w-names   { width:56.5%; aspect-ratio:452/520; }
+  img.w-details { width:43%;   aspect-ratio:344/644; }
+  img.w-contacts{ width:46%;   aspect-ratio:370/370; }
 
-  /* زر ملء الشاشة */
-  .fsbtn{
-    position:fixed;top:12px;inset-inline-end:12px;z-index:30;
-    background:rgba(91,107,79,.85);backdrop-filter:blur(6px);
-    border:none;color:#fff;width:34px;height:34px;border-radius:50%;
-    cursor:pointer;display:grid;place-items:center;
+  /* بريق ناعم يمرّ مرة عند الكشف */
+  .block{position:relative;}
+  .block .glow{
+    position:absolute;inset:0;pointer-events:none;overflow:hidden;
   }
+  .block .glow::before{
+    content:"";position:absolute;top:0;bottom:0;width:60%;left:-60%;
+    background:linear-gradient(115deg,transparent,rgba(255,255,255,.6),transparent);
+  }
+  .block.in .glow::before{ animation:sweep 1.3s ease .2s 1; }
+  @keyframes sweep{to{left:120%;}}
+
+  /* شريط التقدّم */
+  .progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:40;
+    background:linear-gradient(90deg,#9aa886,#5b6b4f);transition:width .12s ease;}
+
+  /* ملء الشاشة */
+  .fsbtn{position:fixed;top:12px;inset-inline-end:12px;z-index:40;
+    background:rgba(91,107,79,.85);backdrop-filter:blur(6px);border:none;color:#fff;
+    width:34px;height:34px;border-radius:50%;cursor:pointer;display:grid;place-items:center;}
   .fsbtn svg{width:16px;height:16px;}
 
-  /* تلميح: مرّر / اكبس */
-  .hint{
-    position:fixed;bottom:18px;left:0;right:0;z-index:30;
-    text-align:center;font-size:13px;color:#5b6b4f;
-    pointer-events:none;
-    animation:vanish 7s forwards;
-  }
-  .hint .pill{
-    display:inline-flex;align-items:center;gap:6px;
-    background:rgba(255,255,255,.85);backdrop-filter:blur(6px);
-    padding:6px 14px;border-radius:99px;
-    box-shadow:0 4px 14px rgba(60,70,55,.15);
-    animation:bob 1.8s ease-in-out infinite;
-  }
+  /* تلميح التمرير */
+  .hint{position:fixed;bottom:18px;left:0;right:0;z-index:40;text-align:center;
+    pointer-events:none;animation:vanish 6s forwards;}
+  .hint .pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink);
+    background:rgba(255,255,255,.92);backdrop-filter:blur(6px);padding:6px 15px;border-radius:99px;
+    box-shadow:0 5px 16px rgba(60,70,55,.16);animation:bob 1.9s ease-in-out infinite;}
   .hint svg{width:16px;height:16px;}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
-  @keyframes vanish{0%,75%{opacity:1}100%{opacity:0}}
-
-  /* منطقة الكبس للتنقّل على الموبايل (النصف السفلي = التالي) */
-  .tapzone{
-    position:fixed;left:0;right:0;bottom:0;height:42%;z-index:5;
-    background:transparent;border:none;cursor:pointer;
-  }
+  @keyframes vanish{0%,72%{opacity:1}100%{opacity:0}}
 </style>
 </head>
 <body>
   <div class="progress" id="progress"></div>
 
-  <div class="frame" id="frame"></div>
+  <main class="deck" id="deck">
+    <section class="block"      data-eager><span class="glow"></span><img class="w-hero"     src="p1-hero.png"     alt="يحيى و حلا"></section>
+    <section class="block text" data-eager><span class="glow"></span><img class="w-emblem"   src="p2-emblem.png"   alt=""></section>
+    <section class="block text"><span class="glow"></span><img class="w-names"    src="p3-names.png"    alt="من نسب شريف طيب الأركان · حرم السيد الدكتور عبد الله الكتاني · حرم السيد الحاج عاصم هيبا · تتشرفان بدعوتكم لحضور حفل زفاف ولديهما · يحيى و حلا"></section>
+    <section class="block text"><span class="glow"></span><img class="w-details"  src="p4-details.png"  alt="إن السرور إذا تشارك ضوعفت بسماته · يوم السبت 20.06.2026 · الساعة 8 · قصر الأب تاون مشروع دمر"></section>
+    <section class="block text"><span class="glow"></span><img class="w-contacts" src="p5-contacts.png" alt="وإن حالت الظروف دون حضوركم نرجوا الاعتذار قبل 16-06-2026 · بيت الكتاني 0933255822 · بيت هيبا 0944663865"></section>
+  </main>
 
   <button class="fsbtn" id="fs" aria-label="ملء الشاشة">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/></svg>
   </button>
 
-  <button class="tapzone" id="tapzone" aria-label="القسم التالي"></button>
-
   <div class="hint" id="hint">
-    <span class="pill">مرّر أو اكبس للأسفل
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    <span class="pill">مرّر للأسفل لرؤية الدعوة
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     </span>
   </div>
 
 <script>
-  const SRC = "invitation-full.jpg";
-  const BANDS = 5;                 // 3840 / 768 = 5 أقسام متساوية
-  const frame = document.getElementById('frame');
+  // ابدأ دائماً من أعلى الدعوة
+  if('scrollRestoration' in history) history.scrollRestoration='manual';
+  scrollTo(0,0);
 
-  // بناء الأقسام، كل قسم يعرض شريحته من الصورة نفسها
-  const bands = [];
-  for(let i=0;i<BANDS;i++){
-    const b=document.createElement('div');
-    b.className='band';
-    const img=document.createElement('img');
-    img.src=SRC;
-    img.alt='دعوة يحيى و حلا - قسم '+(i+1);
-    img.loading = i<2 ? 'eager' : 'lazy';
-    img.style.top = (-i*100)+'%';   // إزاحة الصورة لإظهار الشريحة i
-    b.appendChild(img);
-    frame.appendChild(b);
-    bands.push(b);
-  }
+  const blocks=[...document.querySelectorAll('.block')];
 
-  // حركة الكشف عند دخول كل قسم
+  // الكشف عند دخول كل كتلة الثلثَ الأسفل من الشاشة (أي وأنت واصل لها)
   const io=new IntersectionObserver(es=>{
-    es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
-  },{threshold:.18, rootMargin:'0px 0px -12% 0px'});
-  bands.forEach(b=>io.observe(b));
-  // أول قسم يظهر فوراً
-  requestAnimationFrame(()=>bands[0].classList.add('in'));
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{ rootMargin:'0px 0px -22% 0px', threshold:0.15 });
+  blocks.forEach(b=>io.observe(b));
+  // الكتل الأولى المرئية فوراً
+  requestAnimationFrame(()=>blocks.forEach(b=>{ if(b.hasAttribute('data-eager')) b.classList.add('in'); }));
 
   // شريط التقدّم
   const prog=document.getElementById('progress');
-  function onScroll(){
+  addEventListener('scroll',()=>{
     const h=document.documentElement.scrollHeight-innerHeight;
-    prog.style.width=(h>0 ? (scrollY/h*100) : 0)+'%';
-  }
-  addEventListener('scroll',onScroll,{passive:true});
-  onScroll();
-
-  // الكبس على الموبايل: انتقل للقسم التالي (مع التفاف عند النهاية)
-  function bandHeight(){ return bands[0].getBoundingClientRect().height; }
-  function goNext(){
-    const bh=bandHeight();
-    let idx=Math.round(scrollY/bh);
-    const max=BANDS-1;
-    idx = idx>=max ? 0 : idx+1;       // التفاف للبداية بعد آخر قسم
-    scrollTo({top: idx*bh, behavior:'smooth'});
-  }
-  document.getElementById('tapzone').addEventListener('click',goNext);
-
-  // أسهم لوحة المفاتيح
-  addEventListener('keydown',e=>{
-    const bh=bandHeight();
-    let idx=Math.round(scrollY/bh);
-    if(e.key==='ArrowDown'||e.key==='PageDown'||e.key===' '){e.preventDefault();scrollTo({top:Math.min(idx+1,BANDS-1)*bh,behavior:'smooth'});}
-    if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();scrollTo({top:Math.max(idx-1,0)*bh,behavior:'smooth'});}
-  });
+    prog.style.width=(h>0?scrollY/h*100:0)+'%';
+  },{passive:true});
 
   // ملء الشاشة
   document.getElementById('fs').addEventListener('click',()=>{
